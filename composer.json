@@ -1,0 +1,19 @@
+{
+  "name": "arsthanea/page-actions-bundle",
+  "require": {
+    "kunstmaan/bundles-cms": "~3.2",
+    "friendsofsymfony/user-bundle": "2.0.*@dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "ArsThanea\\PageActionsBundle\\": ""
+    }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maciej Łebkowski",
+      "email": "m.lebkowski@gmail.com"
+    }
+  ]
+}

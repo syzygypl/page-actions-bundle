@@ -1,0 +1,40 @@
+parameters:
+    page_actions.routing.page_route_loader.class: ArsThanea\PageActionsBundle\Routing\PageRouteLoader
+    page_actions.routing.page_actions_router.class: ArsThanea\PageActionsBundle\Routing\PageActionsRouter
+    page_actions.event_listener.page_route_listener.class: ArsThanea\PageActionsBundle\EventListener\PageRouteListener
+
+services:
+    page_actions.routing.page_route_loader:
+        class: %page_actions.routing.page_route_loader.class%
+        arguments: [ "%page_actions.resources%" ]
+        public: false
+        tags:
+            - { name: routing.loader }
+
+    page_actions.repository.page_route:
+        class: ArsThanea\PageActionsBundle\Entity\PageRouteRepository
+        public: false
+        factory:
+          - @doctrine.orm.entity_manager
+          - getRepository
+        arguments:
+          - ArsThanea\PageActionsBundle\Entity\PageRoute
+
+    page_actions.routing.page_actions_router:
+        class: %page_actions.routing.page_actions_router.class%
+        public: false
+        arguments: [ @page_actions.repository.page_route, @router ]
+        tags:
+            - { name: router, priority: -100 }
+
+    page_actions.event_listener.page_route_listener:
+        class: %page_actions.event_listener.page_route_listener.class%
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+          - name: kernel.event_listener
+            event: kunstmaan_node.postPersist
+            method: onNodeSaved
+          - name: kernel.event_listener
+            event: kernel.controller
+            method: onKernelController
+            priority: 100
