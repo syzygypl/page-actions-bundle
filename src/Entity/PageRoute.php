@@ -8,7 +8,7 @@ use Kunstmaan\NodeBundle\Entity\NodeTranslation;
 
 
 /**
- * @ORM\Entity(repositoryClass="PageRouteRepository", )
+ * @ORM\Entity(repositoryClass="PageRouteRepository")
  * @ORM\Table(name="page_routes")
  */
 class PageRoute
@@ -30,6 +30,12 @@ class PageRoute
      * })
      */
     private $nodeTranslation;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private $url;
 
     /**
      * @var array
@@ -60,6 +66,26 @@ class PageRoute
     public function setNodeTranslation(NodeTranslation $nodeTranslation)
     {
         $this->nodeTranslation = $nodeTranslation;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = (string)$url;
 
         return $this;
     }

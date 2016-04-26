@@ -6,7 +6,7 @@
   },
   "autoload": {
     "psr-4": {
-      "ArsThanea\\PageActionsBundle\\": ""
+      "ArsThanea\\PageActionsBundle\\": "src/"
     }
   },
   "license": "MIT",

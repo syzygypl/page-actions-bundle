@@ -4,6 +4,7 @@ namespace ArsThanea\PageActionsBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Kunstmaan\NodeBundle\Entity\NodeTranslation;
+use Symfony\Component\Routing\RouterInterface;
 
 class PageRouteRepository extends EntityRepository
 {
@@ -16,10 +17,10 @@ class PageRouteRepository extends EntityRepository
     {
         $query = $this->createQueryBuilder('pr')
             ->join('pr.nodeTranslation', 'nt')
-            ->select('nt.id', 'nt.url', 'pr.actions')
-            ->where('SUBSTRING(:url, 1, LENGTH(nt.url)) = nt.url')
-            ->orderBy('LENGTH(nt.url)', "DESC")
-            ->setParameter('url', trim($url, '/'))
+            ->select('nt.id', 'pr.url', 'pr.actions')
+            ->where('SUBSTRING(:url, 1, LENGTH(pr.url)) = pr.url')
+            ->orderBy('LENGTH(pr.url)', "DESC")
+            ->setParameter('url', rtrim($url, '/'))
             ->getQuery();
 
         return $query->getArrayResult();
@@ -35,18 +36,22 @@ class PageRouteRepository extends EntityRepository
 
     /**
      * @param NodeTranslation $nodeTranslation
-     * @param array           $actions
+     * @param array $actions
+     * @param RouterInterface $generator
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function saveNodeTranslationActions(NodeTranslation $nodeTranslation, array $actions)
+    public function saveNodeTranslationActions(NodeTranslation $nodeTranslation, array $actions, RouterInterface $generator)
     {
+        /** @var PageRoute $route */
         $route = $this->getNodeTranslationRoutesQueryBuilder($nodeTranslation)->getQuery()->getOneOrNullResult();
 
         if (null === $route) {
             $route = (new PageRoute)->setNodeTranslation($nodeTranslation);
         }
 
+        $url = $generator->generate("_slug", ["_locale" => $nodeTranslation->getLang(), "url" => $nodeTranslation->getUrl()]);
+        $route->setUrl($url);
         $route->setActions($actions);
 
         $this->_em->persist($route);

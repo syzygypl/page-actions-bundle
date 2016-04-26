@@ -85,7 +85,7 @@ class PageActionsRouter implements RouterInterface
             $this->getContext()->setParameter('page_actions', $route['actions']);
 
             try {
-                $res = $this->router->match(substr($pathinfo, strlen($route['url']) + 1));
+                $res = $this->router->match(substr($pathinfo, strlen($route['url'])));
 
                 if ($res) {
                     $res['_nodeTranslation'] = $route['id'];

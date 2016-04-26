@@ -7,6 +7,7 @@ use ArsThanea\PageActionsBundle\Entity\PageRouteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Kunstmaan\NodeBundle\Event\NodeEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\Routing\RouterInterface;
 
 class PageRouteListener
 {
@@ -14,13 +15,19 @@ class PageRouteListener
      * @var EntityManagerInterface
      */
     private $em;
+    /**
+     * @var RouterInterface
+     */
+    private $router;
 
     /**
      * @param EntityManagerInterface $em
+     * @param RouterInterface $router
      */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, RouterInterface $router)
     {
         $this->em = $em;
+        $this->router = $router;
     }
 
     public function onNodeSaved(NodeEvent $event)
@@ -37,7 +44,7 @@ class PageRouteListener
             return;
         }
 
-        $pageRouteRepository->saveNodeTranslationActions($nodeTranslation, $page->getPageActions());
+        $pageRouteRepository->saveNodeTranslationActions($nodeTranslation, $page->getPageActions(), $this->router);
     }
 
     public function onKernelController(FilterControllerEvent $event)
