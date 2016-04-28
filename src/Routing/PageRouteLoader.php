@@ -10,6 +10,8 @@ class PageRouteLoader extends Loader
 {
     const TYPE = 'page_actions';
 
+    const PATH_PREFIX = '/_page_actions';
+
     /**
      * @var array
      */
@@ -50,7 +52,8 @@ class PageRouteLoader extends Loader
             ));
 
             foreach ($subCollection as $routeName => $route) {
-                $collection->add(sprintf('page_action_%s', $routeName), $route);
+                $route = clone $route;
+                $collection->add(sprintf('page_action_%s', $routeName), $route->setPath(self::PATH_PREFIX . $route->getPath()));
             }
 
             $collection->addCollection($subCollection);
