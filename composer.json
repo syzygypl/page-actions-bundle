@@ -1,7 +1,7 @@
 {
   "name": "arsthanea/page-actions-bundle",
   "require": {
-    "kunstmaan/bundles-cms": "~3.2 | ~5.0"
+    "kunstmaan/bundles-cms": "~3.2 | ~5"
   },
   "autoload": {
     "psr-4": {
